@@ -18,7 +18,7 @@ urlpatterns = [
 
     # Your stuff: custom urls includes go here
     #url(r'^quote/', include('quotations.urls')),
-    url(r'^product/', include('products.urls')),
+    url(r'^products/', include('products.urls')),
     url(r'^customers/', include('customers.urls')),
     url(r'^select2/', include('django_select2.urls')),
 

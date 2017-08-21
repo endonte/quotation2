@@ -1,41 +1,102 @@
 {% extends "base.html" %}{% load staticfiles %}
+{% load crispy_forms_tags %}
 
-{% block content %}
+{% block css %}
+
+{{ block.super }}
+<link href="{% static 'css/plugins/footable/footable.core.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block javascript %}
+
+{{ block.super }}
+
+<script src="{% static 'js/plugins/footable/footable.all.min.js' %}"></script>
+
+<script>
+    $(document).ready(function() {
+
+        $('.footable').footable();
+
+    });
+
+</script>
 
 {% endblock %}
 
+{% block content %}
 
-{% block javascript %}
-{{ block.super }}
-<!-- jqGrid -->
-<script src="{% static 'js/plugins/jqGrid/i18n/grid.locale-en.js' %}"></script>
-<script src="{% static 'js/plugins/jqGrid/jquery.jqGrid.min.js' %}"></script>
+<div class="row">
+  <div class="col-md-9">
+    <div class="row">
+      <div class="ibox float-e-margins">
+        <div class="ibox-title">
+          <h5>Product List</h5>
+        </div>
+        <div class="ibox-content">
+          <input type="text" class="form-control input-sm m-b-xs" id="filter"
+                 placeholder="Search Products">
+          <table class="footable table table-stripped toggle-arrow-tiny"
+            data-page-size="15" data-filter=#filter>
+            <thead>
+              <tr>
+                <th data-toggle="true">Product</th>
+                <th>Category</th>
+                <th>UOM</th>
+                <th data-hide="all">Created By</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for product in products %}
+              <tr>
+                <td>{{product}}</td>
+                <td>{{product.category}}</td>
+                <td>{{product.uom}}</td>
+                <td>{{product.created_by}}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+            <tfoot>
+            <tr>
+                <td colspan="5">
+                    <ul class="pagination pull-right"></ul>
+                </td>
+            </tr>
+            </tfoot>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
 
-<script>
-  $.ajax({
-    method: 'GET',
-    url: "{% url 'products:grid_config' %}",
-    success: function (data) {
-      $("#my_grid")
-        .jqGrid(data)
-        .navGrid('#my_grid_nav',
-          {add: false, edit: false, del: false, view: true},
-          {}, // edit options
-          {}, // add options
-          {}, // del options
-          {multipleSearch: true, closeOnEscape: true}, // search options
-          {jqModal: false, closeOnEscape: true} // view options
-        )
-    },
-    error: function (data) {
-      alert("An error occurred!");
-      console.log(data);
-    },
-  })
-</script>
-{% endblock javascript %}
 
-{% block css %}
-{{ block.super }}
-<link href="{% static 'css/plugins/jQueryUI/jquery-ui-1.10.4.custom.min.css' %}" rel="stylesheet">
-{% endblock css %}
+  <div class="col-md-3">
+    {% if form.errors %}
+      <div class="ibox float-e-margins">
+          <div class="ibox-title">
+            <h5>Error Validating form</h5>
+          </div>
+          <div class="ibox-content">
+            {% for error in errorlist %}
+              <div>
+                {{ error }}
+              </div>
+            {% endfor %}
+
+          </div>
+      </div>
+    {% endif %}
+      <div class="ibox float-e-margins">
+        <div class="ibox-title">
+          <h5>Add Product</h5>
+        </div>
+        <div class="ibox-content">
+          {% crispy form %}
+        </div>
+      </div>
+
+  </div>
+
+</div>
+
+{% endblock %}

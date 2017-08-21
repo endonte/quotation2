@@ -1,7 +1,6 @@
 from django.conf.urls import url
-from .views import grid_handler, grid_config
+from .views import ProductListView
 
 urlpatterns = [
-    url(r'^productgrid/$', grid_handler, name='grid_handler'),
-	url(r'^productgrid/cfg/$', grid_config, name='grid_config'),
+    url(r'^$', ProductListView.as_view(), name='product_list'),
 ]
