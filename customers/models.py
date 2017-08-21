@@ -18,11 +18,20 @@ class Customer(models.Model):
         verbose_name='Company Name',
         max_length=75,
         help_text='Business Trading Name',
+        null=True,
+        blank=True,
     )
     company_reg_no = models.CharField(
         verbose_name='Company Registration Number',
         max_length=10,
+        null=True,
+        blank=True,
     )
+
+    def __str__(self):
+        if self.company_name:
+            return self.company_name
+        return self.contact
 
 class Billing_Details(models.Model):
     customer_id = models.OneToOneField(Customer,
